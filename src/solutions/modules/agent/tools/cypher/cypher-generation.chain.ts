@@ -1,20 +1,20 @@
 import { BaseLanguageModel } from 'langchain/base_language'
 import { PromptTemplate } from '@langchain/core/prompts'
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
 
 // tag::function[]
 export default async function initCypherGenerationChain(
-  graph: Neo4jGraph,
-  llm: BaseLanguageModel
+    graph: Neo4jGraph,
+    llm: BaseLanguageModel
 ) {
-  // tag::prompt[]
-  // Create Prompt Template
-  const cypherPrompt = PromptTemplate.fromTemplate(`
+    // tag::prompt[]
+    // Create Prompt Template
+    const cypherPrompt = PromptTemplate.fromTemplate(`
     You are a Neo4j Developer translating user questions into Cypher to answer questions
     about movies and provide recommendations.
     Convert the user's question into a Cypher statement based on the schema.
@@ -50,29 +50,29 @@ export default async function initCypherGenerationChain(
     Question:
     {question}
   `)
-  // end::prompt[]
+    // end::prompt[]
 
-  // tag::sequence[]
-  // tag::startsequence[]
-  // Create the runnable sequence
-  return RunnableSequence.from<string, string>([
-    // end::startsequence[]
-    // tag::assign[]
-    {
-      // Take the input and assign it to the question key
-      question: new RunnablePassthrough(),
-      // Get the schema
-      schema: () => graph.getSchema(),
-    },
-    // end::assign[]
-    // tag::rest[]
-    cypherPrompt,
-    llm,
-    new StringOutputParser(),
-    // end::rest[]
-    // tag::endsequence[]
-  ])
-  // end::endsequence[]
-  // end::sequence[]
+    // tag::sequence[]
+    // tag::startsequence[]
+    // Create the runnable sequence
+    return RunnableSequence.from<string, string>([
+        // end::startsequence[]
+        // tag::assign[]
+        {
+            // Take the input and assign it to the question key
+            question: new RunnablePassthrough(),
+            // Get the schema
+            schema: () => graph.getSchema(),
+        },
+        // end::assign[]
+        // tag::rest[]
+        cypherPrompt,
+        llm,
+        new StringOutputParser(),
+        // end::rest[]
+        // tag::endsequence[]
+    ])
+    // end::endsequence[]
+    // end::sequence[]
 }
 // end::function[]

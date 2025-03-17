@@ -10,11 +10,11 @@ import initGenerateAuthoritativeAnswerChain from '../../chains/authoritative-ans
 
 // tag::input[]
 type CypherRetrievalThroughput = AgentToolInput & {
-  context: string
-  output: string
-  cypher: string
-  results: Record<string, any> | Record<string, any>[]
-  ids: string[]
+    context: string
+    output: string
+    cypher: string
+    results: Record<string, any> | Record<string, any>[]
+    ids: string[]
 }
 // end::input[]
 
@@ -29,23 +29,23 @@ type CypherRetrievalThroughput = AgentToolInput & {
  * @returns {string}
  */
 export async function recursivelyEvaluate(
-  graph: Neo4jGraph,
-  llm: BaseLanguageModel,
-  question: string
+    graph: Neo4jGraph,
+    llm: BaseLanguageModel,
+    question: string
 ): Promise<string> {
-  // TODO: Create Cypher Generation Chain
-  // const generationChain = ...
-  // TODO: Create Cypher Evaluation Chain
-  // const evaluatorChain = ...
-  // TODO: Generate Initial cypher
-  // let cypher = ...
-  // TODO: Recursively evaluate the cypher until there are no errors
-  // tag::evaluatereturn[]
-  // Bug fix: GPT-4 is adamant that it should use id() regardless of
-  // the instructions in the prompt.  As a quick fix, replace it here
-  // cypher = cypher.replace(/\sid\(([^)]+)\)/g, " elementId($1)");
-  // return cypher;
-  // end::evaluatereturn[]
+    // TODO: Create Cypher Generation Chain
+    // const generationChain = ...
+    // TODO: Create Cypher Evaluation Chain
+    // const evaluatorChain = ...
+    // TODO: Generate Initial cypher
+    // let cypher = ...
+    // TODO: Recursively evaluate the cypher until there are no errors
+    // tag::evaluatereturn[]
+    // Bug fix: GPT-4 is adamant that it should use id() regardless of
+    // the instructions in the prompt.  As a quick fix, replace it here
+    // cypher = cypher.replace(/\sid\(([^)]+)\)/g, " elementId($1)");
+    // return cypher;
+    // end::evaluatereturn[]
 }
 // end::recursive[]
 
@@ -60,21 +60,21 @@ export async function recursivelyEvaluate(
  * @returns {Promise<Record<string, any>[]>}
  */
 export async function getResults(
-  graph: Neo4jGraph,
-  llm: BaseLanguageModel,
-  input: { question: string; cypher: string }
+    graph: Neo4jGraph,
+    llm: BaseLanguageModel,
+    input: { question: string; cypher: string }
 ): Promise<any | undefined> {
-  // TODO: catch Cypher errors and pass to the Cypher evaluation chain
+    // TODO: catch Cypher errors and pass to the Cypher evaluation chain
 }
 // end::results[]
 
 // tag::function[]
 export default async function initCypherRetrievalChain(
-  llm: BaseLanguageModel,
-  graph: Neo4jGraph
+    llm: BaseLanguageModel,
+    graph: Neo4jGraph
 ) {
-  // TODO: initiate answer chain
-  // const answerGeneration = ...
-  // TODO: return RunnablePassthrough
+    // TODO: initiate answer chain
+    // const answerGeneration = ...
+    // TODO: return RunnablePassthrough
 }
 // end::function[]

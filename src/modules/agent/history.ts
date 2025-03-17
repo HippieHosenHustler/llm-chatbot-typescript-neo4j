@@ -1,40 +1,40 @@
 import { initGraph } from '../graph'
 
 type UnpersistedChatbotResponse = {
-  input: string
-  rephrasedQuestion: string
-  output: string
-  cypher: string | undefined
+    input: string
+    rephrasedQuestion: string
+    output: string
+    cypher: string | undefined
 }
 
 export type ChatbotResponse = UnpersistedChatbotResponse & {
-  id: string
+    id: string
 }
 
 // tag::clear[]
 export async function clearHistory(sessionId: string): Promise<void> {
-  const graph = await initGraph()
-  await graph.query(
-    `
+    const graph = await initGraph()
+    await graph.query(
+        `
     MATCH (s:Session {id: $sessionId})-[:HAS_RESPONSE]->(r)
     DETACH DELETE r
   `,
-    { sessionId },
-    'WRITE'
-  )
+        { sessionId },
+        'WRITE'
+    )
 }
 // end::clear[]
 
 // tag::get[]
 export async function getHistory(
-  sessionId: string,
-  limit: number = 5
+    sessionId: string,
+    limit: number = 5
 ): Promise<ChatbotResponse[]> {
-  // TODO: Execute the Cypher statement from /cypher/get-history.cypher in a read transaction
-  // TODO: Use string templating to make the limit dynamic: 0..${limit}
-  // const graph = await initGraph()
-  // const res = await graph.query<ChatbotResponse>(cypher, { sessionId }, "READ")
-  // return res
+    // TODO: Execute the Cypher statement from /cypher/get-history.cypher in a read transaction
+    // TODO: Use string templating to make the limit dynamic: 0..${limit}
+    // const graph = await initGraph()
+    // const res = await graph.query<ChatbotResponse>(cypher, { sessionId }, "READ")
+    // return res
 }
 // end::get[]
 
@@ -52,17 +52,17 @@ export async function getHistory(
  * @returns {string}  The ID of the Message node
  */
 export async function saveHistory(
-  sessionId: string,
-  source: string,
-  input: string,
-  rephrasedQuestion: string,
-  output: string,
-  ids: string[],
-  cypher: string | null = null
+    sessionId: string,
+    source: string,
+    input: string,
+    rephrasedQuestion: string,
+    output: string,
+    ids: string[],
+    cypher: string | null = null
 ): Promise<string> {
-  // TODO: Execute the Cypher statement from /cypher/save-response.cypher in a write transaction
-  // const graph = await initGraph()
-  // const res = await graph.query<{id: string}>(cypher, params, "WRITE")
-  // return res[0].id
+    // TODO: Execute the Cypher statement from /cypher/save-response.cypher in a write transaction
+    // const graph = await initGraph()
+    // const res = await graph.query<{id: string}>(cypher, params, "WRITE")
+    // return res[0].id
 }
 // end::save[]

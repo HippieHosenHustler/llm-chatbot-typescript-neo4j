@@ -9,15 +9,15 @@ import { RunnableConfig } from 'langchain/runnables'
 
 // tag::function[]
 export default async function initTools(
-  llm: BaseChatModel,
-  embeddings: Embeddings,
-  graph: Neo4jGraph
+    llm: BaseChatModel,
+    embeddings: Embeddings,
+    graph: Neo4jGraph
 ): Promise<DynamicStructuredTool[]> {
-  // TODO: Initiate chains
-  // const cypherChain = await ...
-  // const retrievalChain = await ...
+    // TODO: Initiate chains
+    // const cypherChain = await ...
+    // const retrievalChain = await ...
 
-  // TODO: Append chains to output
-  return []
+    // TODO: Append chains to output
+    return []
 }
 // end::function[]

@@ -5,17 +5,17 @@ import { BaseLanguageModel } from 'langchain/base_language'
 
 // tag::interface[]
 export interface GenerateAnswerInput {
-  question: string
-  context: string
+    question: string
+    context: string
 }
 // end::interface[]
 
 // tag::function[]
 export default function initGenerateAnswerChain(
-  llm: BaseLanguageModel
+    llm: BaseLanguageModel
 ): RunnableSequence<GenerateAnswerInput, string> {
-  // tag::prompt[]
-  const answerQuestionPrompt = PromptTemplate.fromTemplate(`
+    // tag::prompt[]
+    const answerQuestionPrompt = PromptTemplate.fromTemplate(`
     Use only the following context to answer the following question.
 
     Question:
@@ -30,15 +30,15 @@ export default function initGenerateAnswerChain(
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     Include links and sources where possible.
   `)
-  // end::prompt[]
+    // end::prompt[]
 
-  // tag::sequence[]
-  return RunnableSequence.from<GenerateAnswerInput, string>([
-    answerQuestionPrompt,
-    llm,
-    new StringOutputParser(),
-  ])
-  // end::sequence[]
+    // tag::sequence[]
+    return RunnableSequence.from<GenerateAnswerInput, string>([
+        answerQuestionPrompt,
+        llm,
+        new StringOutputParser(),
+    ])
+    // end::sequence[]
 }
 // end::function[]
 

@@ -1,34 +1,34 @@
 import { BaseLanguageModel } from 'langchain/base_language'
 import { PromptTemplate } from '@langchain/core/prompts'
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 import { JsonOutputParser } from '@langchain/core/output_parsers'
 
 // tag::interface[]
 export type CypherEvaluationChainInput = {
-  question: string
-  cypher: string
-  schema: string
-  errors: string[] | string | undefined
+    question: string
+    cypher: string
+    schema: string
+    errors: string[] | string | undefined
 }
 // end::interface[]
 
 // tag::output[]
 export type CypherEvaluationChainOutput = {
-  cypher: string
-  errors: string[]
+    cypher: string
+    errors: string[]
 }
 // end::output[]
 
 // tag::function[]
 export default async function initCypherEvaluationChain(
-  llm: BaseLanguageModel
+    llm: BaseLanguageModel
 ) {
-  // tag::prompt[]
-  // Prompt template
-  const prompt = PromptTemplate.fromTemplate(`
+    // tag::prompt[]
+    // Prompt template
+    const prompt = PromptTemplate.fromTemplate(`
     You are an expert Neo4j Developer evaluating a Cypher statement written by an AI.
 
     Check that the cypher statement provided below against the database schema to check that
@@ -78,40 +78,40 @@ export default async function initCypherEvaluationChain(
 
     {errors}
   `)
-  // end::prompt[]
+    // end::prompt[]
 
-  // tag::runnable[]
-  // tag::startsequence[]
-  return RunnableSequence.from<
-    CypherEvaluationChainInput,
-    CypherEvaluationChainOutput
-  >([
-    // end::startsequence[]
-    // tag::assign[]
-    RunnablePassthrough.assign({
-      // Convert errors into an LLM-friendly list
-      errors: ({ errors }) => {
-        if (
-          errors === undefined ||
-          (Array.isArray(errors) && errors.length === 0)
-        ) {
-          return ''
-        }
+    // tag::runnable[]
+    // tag::startsequence[]
+    return RunnableSequence.from<
+        CypherEvaluationChainInput,
+        CypherEvaluationChainOutput
+    >([
+        // end::startsequence[]
+        // tag::assign[]
+        RunnablePassthrough.assign({
+            // Convert errors into an LLM-friendly list
+            errors: ({ errors }) => {
+                if (
+                    errors === undefined ||
+                    (Array.isArray(errors) && errors.length === 0)
+                ) {
+                    return ''
+                }
 
-        return `Errors: * ${
-          Array.isArray(errors) ? errors?.join('\n* ') : errors
-        }`
-      },
-    }),
-    // end::assign[]
-    // tag::rest[]
-    prompt,
-    llm,
-    new JsonOutputParser<CypherEvaluationChainOutput>(),
-    // end::rest[]
-    // tag::endsequence[]
-  ])
-  // end::endsequence[]
-  // end::runnable[]
+                return `Errors: * ${
+                    Array.isArray(errors) ? errors?.join('\n* ') : errors
+                }`
+            },
+        }),
+        // end::assign[]
+        // tag::rest[]
+        prompt,
+        llm,
+        new JsonOutputParser<CypherEvaluationChainOutput>(),
+        // end::rest[]
+        // tag::endsequence[]
+    ])
+    // end::endsequence[]
+    // end::runnable[]
 }
 // end::function[]

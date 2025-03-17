@@ -1,39 +1,39 @@
 import { initGraph } from '../../../modules/graph'
 
 type UnpersistedChatbotResponse = {
-  input: string
-  rephrasedQuestion: string
-  output: string
-  cypher: string | undefined
+    input: string
+    rephrasedQuestion: string
+    output: string
+    cypher: string | undefined
 }
 
 export type ChatbotResponse = UnpersistedChatbotResponse & {
-  id: string
+    id: string
 }
 
 // tag::clear[]
 export async function clearHistory(sessionId: string): Promise<void> {
-  const graph = await initGraph()
-  await graph.query(
-    `
+    const graph = await initGraph()
+    await graph.query(
+        `
     MATCH (s:Session {id: $sessionId})-[:HAS_RESPONSE]->(r)
     DETACH DELETE r
   `,
-    { sessionId },
-    'WRITE'
-  )
+        { sessionId },
+        'WRITE'
+    )
 }
 // end::clear[]
 
 // tag::get[]
 export async function getHistory(
-  sessionId: string,
-  limit: number = 5
+    sessionId: string,
+    limit: number = 5
 ): Promise<ChatbotResponse[]> {
-  // tag::gettx[]
-  const graph = await initGraph()
-  const res = await graph.query<ChatbotResponse>(
-    `
+    // tag::gettx[]
+    const graph = await initGraph()
+    const res = await graph.query<ChatbotResponse>(
+        `
       MATCH (:Session {id: $sessionId})-[:LAST_RESPONSE]->(last)
       MATCH path = (start)-[:NEXT*0..${limit}]->(last)
       WHERE length(path) = 5 OR NOT EXISTS { ()-[:NEXT]->(start) }
@@ -46,14 +46,14 @@ export async function getHistory(
         response.createdAt AS createdAt,
         [ (response)-[:CONTEXT]->(n) | elementId(n) ] AS context
     `,
-    { sessionId },
-    'READ'
-  )
-  // end::gettx[]
+        { sessionId },
+        'READ'
+    )
+    // end::gettx[]
 
-  // tag::getreturn[]
-  return res as ChatbotResponse[]
-  // end::getreturn[]
+    // tag::getreturn[]
+    return res as ChatbotResponse[]
+    // end::getreturn[]
 }
 // end::get[]
 
@@ -71,18 +71,18 @@ export async function getHistory(
  * @returns {string}  The ID of the Message node
  */
 export async function saveHistory(
-  sessionId: string,
-  source: string,
-  input: string,
-  rephrasedQuestion: string,
-  output: string,
-  ids: string[],
-  cypher: string | null = null
+    sessionId: string,
+    source: string,
+    input: string,
+    rephrasedQuestion: string,
+    output: string,
+    ids: string[],
+    cypher: string | null = null
 ): Promise<string> {
-  // tag::savetx[]
-  const graph = await initGraph()
-  const res = await graph.query<{ id: string }>(
-    `
+    // tag::savetx[]
+    const graph = await initGraph()
+    const res = await graph.query<{ id: string }>(
+        `
     MERGE (session:Session { id: $sessionId }) // <1>
 
     // <2> Create new response
@@ -130,21 +130,21 @@ export async function saveHistory(
 
     RETURN DISTINCT response.id AS id
   `,
-    {
-      sessionId,
-      source,
-      input,
-      output,
-      rephrasedQuestion,
-      cypher: cypher,
-      ids,
-    },
-    'WRITE'
-  )
-  // end::savetx[]
+        {
+            sessionId,
+            source,
+            input,
+            output,
+            rephrasedQuestion,
+            cypher: cypher,
+            ids,
+        },
+        'WRITE'
+    )
+    // end::savetx[]
 
-  // tag::savereturn[]
-  return res && res.length ? res[0].id : ''
-  // end::savereturn[]
+    // tag::savereturn[]
+    return res && res.length ? res[0].id : ''
+    // end::savereturn[]
 }
 // end::save[]

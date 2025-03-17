@@ -14,7 +14,7 @@ Tell me about the following fruit: {fruit}
 import { ChatOpenAI } from '@langchain/openai'
 
 const llm = new ChatOpenAI({
-  openAIApiKey: 'sk-...',
+    openAIApiKey: 'sk-...',
 })
 // end::llm[]
 
@@ -25,8 +25,8 @@ const parser = new StringOutputParser()
 // end::parser[]
 // tag::passthrough[]
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 // end::passthrough[]
 
@@ -53,11 +53,11 @@ const chain = RunnableSequence.from([prompt, llm, parser])
 // end::chain[]
 
 const main = async () => {
-  // tag::invoke[]
-  const response = await chain.invoke({ fruit: 'pineapple' })
+    // tag::invoke[]
+    const response = await chain.invoke({ fruit: 'pineapple' })
 
-  console.log(response)
-  // end::invoke[]
+    console.log(response)
+    // end::invoke[]
 }
 
 main()

@@ -12,11 +12,11 @@ let graph: Neo4jGraph
  * @returns {Promise<Neo4jGraph>}
  */
 export async function initGraph(): Promise<Neo4jGraph> {
-  if (!graph) {
-    // TODO: Create singleton and wait for connection to be verified
-  }
+    if (!graph) {
+        // TODO: Create singleton and wait for connection to be verified
+    }
 
-  return graph
+    return graph
 }
 // end::graph[]
 
@@ -26,7 +26,7 @@ export async function initGraph(): Promise<Neo4jGraph> {
  * @returns {Promise<void>}
  */
 export async function close(): Promise<void> {
-  if (graph) {
-    await graph.close()
-  }
+    if (graph) {
+        await graph.close()
+    }
 }

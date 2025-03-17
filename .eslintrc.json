@@ -1,7 +1,7 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"],
-  "rules": {
-    "indent": ["error", 2],
-    "max-len": ["error", 120]
-  }
+    "extends": ["next/core-web-vitals", "prettier"],
+    "rules": {
+        "indent": ["error", 4],
+        "max-len": ["error", 120]
+    }
 }

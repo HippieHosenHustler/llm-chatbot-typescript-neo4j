@@ -1,8 +1,8 @@
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 
 import { BaseChatModel } from 'langchain/chat_models/base'
@@ -10,19 +10,19 @@ import { ChatbotResponse } from '../history'
 
 // tag::interface[]
 export type RephraseQuestionInput = {
-  // The user's question
-  input: string
-  // Conversation history of {input, output} from the database
-  history: ChatbotResponse[]
+    // The user's question
+    input: string
+    // Conversation history of {input, output} from the database
+    history: ChatbotResponse[]
 }
 // end::interface[]
 
 // tag::function[]
 export default function initRephraseChain(llm: BaseChatModel) {
-  // TODO: Create Prompt template
-  // const rephraseQuestionChainPrompt = PromptTemplate.fromTemplate<RephraseQuestionInput, string>(...)
-  // TODO: Create Runnable Sequence
-  // return RunnableSequence.from<RephraseQuestionInput, string>(
+    // TODO: Create Prompt template
+    // const rephraseQuestionChainPrompt = PromptTemplate.fromTemplate<RephraseQuestionInput, string>(...)
+    // TODO: Create Runnable Sequence
+    // return RunnableSequence.from<RephraseQuestionInput, string>(
 }
 // end::function[]
 

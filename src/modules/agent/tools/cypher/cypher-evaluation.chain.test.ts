@@ -6,120 +6,120 @@ import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
 import initCypherEvaluationChain from './cypher-evaluation.chain'
 
 describe('Cypher Evaluation Chain', () => {
-  let graph: Neo4jGraph
-  let llm: BaseChatModel
-  let chain: RunnableSequence
+    let graph: Neo4jGraph
+    let llm: BaseChatModel
+    let chain: RunnableSequence
 
-  beforeAll(async () => {
-    config({ path: '.env.local' })
+    beforeAll(async () => {
+        config({ path: '.env.local' })
 
-    graph = await Neo4jGraph.initialize({
-      url: process.env.NEO4J_URI as string,
-      username: process.env.NEO4J_USERNAME as string,
-      password: process.env.NEO4J_PASSWORD as string,
-      database: process.env.NEO4J_DATABASE as string | undefined,
+        graph = await Neo4jGraph.initialize({
+            url: process.env.NEO4J_URI as string,
+            username: process.env.NEO4J_USERNAME as string,
+            password: process.env.NEO4J_PASSWORD as string,
+            database: process.env.NEO4J_DATABASE as string | undefined,
+        })
+
+        llm = new ChatOpenAI({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            modelName: 'gpt-3.5-turbo',
+            temperature: 0,
+            configuration: {
+                baseURL: process.env.OPENAI_API_BASE,
+            },
+        })
+
+        chain = await initCypherEvaluationChain(llm)
     })
 
-    llm = new ChatOpenAI({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      modelName: 'gpt-3.5-turbo',
-      temperature: 0,
-      configuration: {
-        baseURL: process.env.OPENAI_API_BASE,
-      },
+    afterAll(async () => {
+        await graph.close()
     })
 
-    chain = await initCypherEvaluationChain(llm)
-  })
+    it('should fix a non-existent label', async () => {
+        const input = {
+            question: 'How many movies are in the database?',
+            cypher: 'MATCH (m:Muvee) RETURN count(m) AS count',
+            schema: graph.getSchema(),
+            errors: ['Label Muvee does not exist'],
+        }
 
-  afterAll(async () => {
-    await graph.close()
-  })
+        const { cypher, errors } = await chain.invoke(input)
 
-  it('should fix a non-existent label', async () => {
-    const input = {
-      question: 'How many movies are in the database?',
-      cypher: 'MATCH (m:Muvee) RETURN count(m) AS count',
-      schema: graph.getSchema(),
-      errors: ['Label Muvee does not exist'],
-    }
+        expect(cypher).toContain('MATCH (m:Movie) RETURN count(m) AS count')
 
-    const { cypher, errors } = await chain.invoke(input)
+        expect(errors.length).toBe(1)
 
-    expect(cypher).toContain('MATCH (m:Movie) RETURN count(m) AS count')
+        let found = false
 
-    expect(errors.length).toBe(1)
+        for (const error of errors) {
+            if (error.includes('label Muvee does not exist')) {
+                found = true
+            }
+        }
 
-    let found = false
+        expect(found).toBe(true)
+    })
 
-    for (const error of errors) {
-      if (error.includes('label Muvee does not exist')) {
-        found = true
-      }
-    }
+    it('should fix a non-existent relationship', async () => {
+        const input = {
+            question: 'Who acted in the matrix?',
+            cypher: 'MATCH (m:Muvee)-[:ACTS_IN]->(a:Person) WHERE m.name = "The Matrix" RETURN a.name AS actor',
+            schema: graph.getSchema(),
+            errors: [
+                'Label Muvee does not exist',
+                'Relationship type ACTS_IN does not exist',
+            ],
+        }
 
-    expect(found).toBe(true)
-  })
+        const { cypher, errors } = await chain.invoke(input)
 
-  it('should fix a non-existent relationship', async () => {
-    const input = {
-      question: 'Who acted in the matrix?',
-      cypher:
-        'MATCH (m:Muvee)-[:ACTS_IN]->(a:Person) WHERE m.name = "The Matrix" RETURN a.name AS actor',
-      schema: graph.getSchema(),
-      errors: [
-        'Label Muvee does not exist',
-        'Relationship type ACTS_IN does not exist',
-      ],
-    }
+        expect(cypher).toContain('MATCH (m:Movie')
+        expect(cypher).toContain(':ACTED_IN')
 
-    const { cypher, errors } = await chain.invoke(input)
+        expect(errors.length).toBeGreaterThanOrEqual(2)
 
-    expect(cypher).toContain('MATCH (m:Movie')
-    expect(cypher).toContain(':ACTED_IN')
+        let found = false
 
-    expect(errors.length).toBeGreaterThanOrEqual(2)
+        for (const error of errors) {
+            if (error.includes('ACTS_IN')) {
+                found = true
+            }
+        }
 
-    let found = false
+        expect(found).toBe(true)
+    })
 
-    for (const error of errors) {
-      if (error.includes('ACTS_IN')) {
-        found = true
-      }
-    }
+    it('should return no errors if the query is fine', async () => {
+        const cypher = 'MATCH (m:Movie) RETURN count(m) AS count'
+        const input = {
+            question: 'How many movies are in the database?',
+            cypher,
+            schema: graph.getSchema(),
+            errors: ['Label Muvee does not exist'],
+        }
 
-    expect(found).toBe(true)
-  })
+        const { cypher: updatedCypher, errors } = await chain.invoke(input)
 
-  it('should return no errors if the query is fine', async () => {
-    const cypher = 'MATCH (m:Movie) RETURN count(m) AS count'
-    const input = {
-      question: 'How many movies are in the database?',
-      cypher,
-      schema: graph.getSchema(),
-      errors: ['Label Muvee does not exist'],
-    }
+        expect(updatedCypher).toContain(cypher)
+        expect(errors.length).toBe(0)
+    })
 
-    const { cypher: updatedCypher, errors } = await chain.invoke(input)
+    it('should keep variables in relationship', async () => {
+        const cypher =
+            "MATCH (a:Actor {name: 'Emil Eifrem'})-[r:ACTED_IN]->" +
+            "(m:Movie {title: 'Neo4j - Into the Graph'}) RETURN r.role AS Role"
+        const input = {
+            question:
+                'What role did Emil Eifrem play in Neo4j - Into the Graph',
+            cypher,
+            schema: graph.getSchema(),
+            errors: [],
+        }
 
-    expect(updatedCypher).toContain(cypher)
-    expect(errors.length).toBe(0)
-  })
+        const { cypher: updatedCypher, errors } = await chain.invoke(input)
 
-  it('should keep variables in relationship', async () => {
-    const cypher =
-      "MATCH (a:Actor {name: 'Emil Eifrem'})-[r:ACTED_IN]->" +
-      "(m:Movie {title: 'Neo4j - Into the Graph'}) RETURN r.role AS Role"
-    const input = {
-      question: 'What role did Emil Eifrem play in Neo4j - Into the Graph',
-      cypher,
-      schema: graph.getSchema(),
-      errors: [],
-    }
-
-    const { cypher: updatedCypher, errors } = await chain.invoke(input)
-
-    expect(updatedCypher).toContain(cypher)
-    expect(errors.length).toBe(0)
-  })
+        expect(updatedCypher).toContain(cypher)
+        expect(errors.length).toBe(0)
+    })
 })

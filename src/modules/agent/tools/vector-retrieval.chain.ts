@@ -1,7 +1,7 @@
 import {
-  Runnable,
-  RunnablePassthrough,
-  RunnablePick,
+    Runnable,
+    RunnablePassthrough,
+    RunnablePick,
 } from '@langchain/core/runnables'
 import { Embeddings } from '@langchain/core/embeddings'
 import initGenerateAnswerChain from '../chains/answer-generation.chain'
@@ -13,16 +13,16 @@ import { AgentToolInput } from '../agent.types'
 
 // tag::throughput[]
 type RetrievalChainThroughput = AgentToolInput & {
-  context: string
-  output: string
-  ids: string[]
+    context: string
+    output: string
+    ids: string[]
 }
 // end::throughput[]
 
 // tag::extractDocumentIds[]
 // Helper function to extract document IDs from Movie node metadata
 const extractDocumentIds = (
-  documents: DocumentInterface<{ _id: string; [key: string]: any }>[]
+    documents: DocumentInterface<{ _id: string; [key: string]: any }>[]
 ): string[] => documents.map((document) => document.metadata._id)
 // end::extractDocumentIds[]
 
@@ -33,16 +33,16 @@ const docsToJson = (documents: DocumentInterface[]) => JSON.stringify(documents)
 
 // tag::function[]
 export default async function initVectorRetrievalChain(
-  llm: BaseLanguageModel,
-  embeddings: Embeddings
+    llm: BaseLanguageModel,
+    embeddings: Embeddings
 ): Promise<Runnable<AgentToolInput, string>> {
-  // TODO: Create vector store instance
-  // const vectorStore = ...
-  // TODO: Initialize a retriever wrapper around the vector store
-  // const vectorStoreRetriever = ...
-  // TODO: Initialize Answer chain
-  // const answerChain = ...
-  // TODO: Return chain
-  // return RunnablePassthrough.assign( ... )
+    // TODO: Create vector store instance
+    // const vectorStore = ...
+    // TODO: Initialize a retriever wrapper around the vector store
+    // const vectorStoreRetriever = ...
+    // TODO: Initialize Answer chain
+    // const answerChain = ...
+    // TODO: Return chain
+    // return RunnablePassthrough.assign( ... )
 }
 // end::function[]

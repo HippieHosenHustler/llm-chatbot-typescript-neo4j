@@ -1,23 +1,23 @@
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 import { BaseLanguageModel } from 'langchain/base_language'
 
 // tag::interface[]
 export type GenerateAuthoritativeAnswerInput = {
-  question: string
-  context: string | undefined
+    question: string
+    context: string | undefined
 }
 // end::interface[]
 
 export default function initGenerateAuthoritativeAnswerChain(
-  llm: BaseLanguageModel
+    llm: BaseLanguageModel
 ): RunnableSequence<GenerateAuthoritativeAnswerInput, string> {
-  // tag::prompt[]
-  const answerQuestionPrompt = PromptTemplate.fromTemplate(`
+    // tag::prompt[]
+    const answerQuestionPrompt = PromptTemplate.fromTemplate(`
     Use the following context to answer the following question.
     The context is provided by an authoritative source, you must never doubt
     it or attempt to use your pre-trained knowledge to correct the answer.
@@ -43,19 +43,21 @@ export default function initGenerateAuthoritativeAnswerChain(
     Context:
     {context}
   `)
-  // end::prompt[]
+    // end::prompt[]
 
-  // tag::sequence[]
-  return RunnableSequence.from<GenerateAuthoritativeAnswerInput, string>([
-    RunnablePassthrough.assign({
-      context: ({ context }) =>
-        context == undefined || context === '' ? "I don't know" : context,
-    }),
-    answerQuestionPrompt,
-    llm,
-    new StringOutputParser(),
-  ])
-  // end::sequence[]
+    // tag::sequence[]
+    return RunnableSequence.from<GenerateAuthoritativeAnswerInput, string>([
+        RunnablePassthrough.assign({
+            context: ({ context }) =>
+                context == undefined || context === ''
+                    ? "I don't know"
+                    : context,
+        }),
+        answerQuestionPrompt,
+        llm,
+        new StringOutputParser(),
+    ])
+    // end::sequence[]
 }
 
 /**

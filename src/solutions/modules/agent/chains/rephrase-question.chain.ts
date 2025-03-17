@@ -1,8 +1,8 @@
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import { PromptTemplate } from '@langchain/core/prompts'
 import {
-  RunnablePassthrough,
-  RunnableSequence,
+    RunnablePassthrough,
+    RunnableSequence,
 } from '@langchain/core/runnables'
 
 import { BaseChatModel } from 'langchain/chat_models/base'
@@ -10,21 +10,21 @@ import { ChatbotResponse } from '../history'
 
 // tag::interface[]
 export type RephraseQuestionInput = {
-  // The user's question
-  input: string
-  // Conversation history of {input, output} from the database
-  history: ChatbotResponse[]
+    // The user's question
+    input: string
+    // Conversation history of {input, output} from the database
+    history: ChatbotResponse[]
 }
 // end::interface[]
 
 // tag::function[]
 export default function initRephraseChain(llm: BaseChatModel) {
-  // tag::prompt[]
-  // Prompt template
-  const rephraseQuestionChainPrompt = PromptTemplate.fromTemplate<
-    RephraseQuestionInput,
-    string
-  >(`
+    // tag::prompt[]
+    // Prompt template
+    const rephraseQuestionChainPrompt = PromptTemplate.fromTemplate<
+        RephraseQuestionInput,
+        string
+    >(`
     Given the following conversation and a question,
     rephrase the follow-up question to be a standalone question about the
     subject of the conversation history.
@@ -40,34 +40,34 @@ export default function initRephraseChain(llm: BaseChatModel) {
     Question:
     {input}
   `)
-  // end::prompt[]
+    // end::prompt[]
 
-  // tag::sequence[]
-  return RunnableSequence.from<RephraseQuestionInput, string>([
-    // <1> Convert message history to a string
-    // tag::assign[]
-    RunnablePassthrough.assign({
-      history: ({ history }): string => {
-        if (history.length == 0) {
-          return 'No history'
-        }
-        return history
-          .map(
-            (response: ChatbotResponse) =>
-              `Human: ${response.input}\nAI: ${response.output}`
-          )
-          .join('\n')
-      },
-    }),
-    // end::assign[]
-    // <2> Use the input and formatted history to format the prompt
-    rephraseQuestionChainPrompt,
-    // <3> Pass the formatted prompt to the LLM
-    llm,
-    // <4> Coerce the output into a string
-    new StringOutputParser(),
-  ])
-  // end::sequence[]
+    // tag::sequence[]
+    return RunnableSequence.from<RephraseQuestionInput, string>([
+        // <1> Convert message history to a string
+        // tag::assign[]
+        RunnablePassthrough.assign({
+            history: ({ history }): string => {
+                if (history.length == 0) {
+                    return 'No history'
+                }
+                return history
+                    .map(
+                        (response: ChatbotResponse) =>
+                            `Human: ${response.input}\nAI: ${response.output}`
+                    )
+                    .join('\n')
+            },
+        }),
+        // end::assign[]
+        // <2> Use the input and formatted history to format the prompt
+        rephraseQuestionChainPrompt,
+        // <3> Pass the formatted prompt to the LLM
+        llm,
+        // <4> Coerce the output into a string
+        new StringOutputParser(),
+    ])
+    // end::sequence[]
 }
 // end::function[]
 
