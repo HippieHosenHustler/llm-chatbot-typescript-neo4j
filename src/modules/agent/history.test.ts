@@ -15,7 +15,7 @@ describe("Conversation History", () => {
 
     // Delete responses
     await graph.query(
-      'MATCH (s:Session)-[:HAS_RESPONSE]->(r:Response) WHERE s.id IN ["test-1", "test-2", "test-3"] DETACH DELETE s, r'
+      'MATCH (s:Session)-[:HAS_RESPONSE]->(r:Response) WHERE s.id IN ["test-1", "test-2", "test-3"] DETACH DELETE s, r',
     );
 
     // Create some test sources to link to
@@ -52,7 +52,7 @@ describe("Conversation History", () => {
       rephrasedQuestion,
       output,
       ids,
-      cypher
+      cypher,
     );
 
     expect(id).toBeDefined();
@@ -74,7 +74,7 @@ describe("Conversation History", () => {
         RETURN r { .* } AS properties,
         [ (r)-[:CONTEXT]->(c) | elementId(c) ] AS context
       `,
-      { sessionId }
+      { sessionId },
     );
 
     expect(res).toBeDefined();

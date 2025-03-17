@@ -22,7 +22,7 @@ function getSessionId(req: NextApiRequest, res: NextApiResponse): string {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method === "POST") {
     const body = JSON.parse(req.body);

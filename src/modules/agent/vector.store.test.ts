@@ -40,7 +40,7 @@ describe("Vector Store", () => {
         embeddingNodeProperty: "embedding",
         textNodeProperty: "text",
         indexName,
-      }
+      },
     );
 
     expect(index).toBeInstanceOf(Neo4jVectorStore);

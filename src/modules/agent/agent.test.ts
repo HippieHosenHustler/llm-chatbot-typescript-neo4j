@@ -56,7 +56,7 @@ describe("Langchain Agent", () => {
           configurable: {
             sessionId,
           },
-        }
+        },
       );
 
       // Check database
@@ -67,7 +67,7 @@ describe("Langchain Agent", () => {
           count { (r)-[:CONTEXT]->() } AS context,
           [ (r)-[:CONTEXT]->(m) | m.title ] AS movies
       `,
-        { sessionId }
+        { sessionId },
       );
 
       expect(sessionRes).toBeDefined();

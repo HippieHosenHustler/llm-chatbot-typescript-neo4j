@@ -23,11 +23,13 @@ import initTools from "./tools";
 import { MessagesPlaceholder } from "@langchain/core/prompts";
 
 const prompt = ChatPromptTemplate.fromMessages<{
-  'chat_history': string, 
-  agent_scratchpad: string, 
-  rephrasedQuestion: string
+  chat_history: string;
+  agent_scratchpad: string;
+  rephrasedQuestion: string;
 }>([
-  ['system', `
+  [
+    "system",
+    `
   You are Ebert, a movie recommendation chatbot.
   Your goal is to provide movie lovers with excellent recommendations
   backed by data from Neo4j, the world's leading graph database.
@@ -37,9 +39,9 @@ const prompt = ChatPromptTemplate.fromMessages<{
   related to the movie industry.
   `,
   ],
-  [ 'human', '{rephrasedQuestion}' ],
-  new MessagesPlaceholder({variableName: 'chat_history', optional: true}),
-  new MessagesPlaceholder('agent_scratchpad'),
+  ["human", "{rephrasedQuestion}"],
+  new MessagesPlaceholder({ variableName: "chat_history", optional: true }),
+  new MessagesPlaceholder("agent_scratchpad"),
 ]);
 // end::scoped[]
 
@@ -47,7 +49,7 @@ const prompt = ChatPromptTemplate.fromMessages<{
 export default async function initAgent(
   llm: BaseChatModel,
   embeddings: Embeddings,
-  graph: Neo4jGraph
+  graph: Neo4jGraph,
 ) {
   // tag::tools[]
   const tools = await initTools(llm, embeddings, graph);
@@ -55,7 +57,7 @@ export default async function initAgent(
 
   // tag::prompt[]
   const prompt = await pull<ChatPromptTemplate>(
-    "hwchase17/openai-functions-agent"
+    "hwchase17/openai-functions-agent",
   );
   // end::prompt[]
 
@@ -85,7 +87,7 @@ export default async function initAgent(
       // Get Message History
       history: async (_input, options) => {
         const history = await getHistory(
-          options?.config.configurable.sessionId
+          options?.config.configurable.sessionId,
         );
 
         return history;

@@ -46,7 +46,7 @@ describe("Cypher QA Chain", () => {
     const sessionId = "cypher-retrieval-1";
 
     const res = (await graph.query(
-      `MATCH (n:Movie) RETURN count(n) AS count`
+      `MATCH (n:Movie) RETURN count(n) AS count`,
     )) as { count: number }[];
 
     expect(res).toBeDefined();
@@ -56,7 +56,7 @@ describe("Cypher QA Chain", () => {
         input: "how many are there?",
         rephrasedQuestion: "How many Movies are in the database?",
       },
-      { configurable: { sessionId } }
+      { configurable: { sessionId } },
     );
 
     expect(output).toContain(res[0].count);
@@ -80,7 +80,7 @@ describe("Cypher QA Chain", () => {
           m { .title, _id: elementId(m) } AS movie,
           p { .name, _id: elementId(p) } AS person
       `,
-      { movie, person, role }
+      { movie, person, role },
     );
 
     const input = "what did they play?";
@@ -91,7 +91,7 @@ describe("Cypher QA Chain", () => {
         input,
         rephrasedQuestion,
       },
-      { configurable: { sessionId } }
+      { configurable: { sessionId } },
     );
 
     expect(output).toContain(role);
@@ -106,7 +106,7 @@ describe("Cypher QA Chain", () => {
         r.output AS output,
         [ (m)-[:CONTEXT]->(c) | elementId(c) ] AS ids
     `,
-      { sessionId }
+      { sessionId },
     );
 
     expect(contextRes).toBeDefined();
@@ -137,7 +137,7 @@ describe("Cypher QA Chain", () => {
           m { .title, _id: elementId(m) } AS movie,
           p { .name, _id: elementId(p) } AS person
       `,
-      { movie, person, role }
+      { movie, person, role },
     );
 
     const output = await chain.invoke(
@@ -145,7 +145,7 @@ describe("Cypher QA Chain", () => {
         input: "what did they play?",
         rephrasedQuestion: `What movies has ${person} acted in?`,
       },
-      { configurable: { sessionId } }
+      { configurable: { sessionId } },
     );
     expect(output).toContain(person);
     expect(output).toContain(movie);
@@ -160,7 +160,7 @@ describe("Cypher QA Chain", () => {
         r.output AS output,
         [ (m)-[:CONTEXT]->(c) | elementId(c) ] AS ids
     `,
-      { sessionId }
+      { sessionId },
     );
 
     expect(contextRes).toBeDefined();
@@ -181,7 +181,7 @@ describe("Cypher QA Chain", () => {
       const res = await recursivelyEvaluate(
         graph,
         llm,
-        "What movies has Emil Eifrem acted in?"
+        "What movies has Emil Eifrem acted in?",
       );
 
       expect(res).toBeDefined();

@@ -10,7 +10,7 @@ import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector
  */
 // tag::function[]
 export default async function initVectorStore(
-  embeddings: EmbeddingsInterface
+  embeddings: EmbeddingsInterface,
 ): Promise<Neo4jVectorStore> {
   // TODO: Create vector store
   // const vectorStore = await Neo4jVectorStore.fromExistingIndex(embeddings, { ... })

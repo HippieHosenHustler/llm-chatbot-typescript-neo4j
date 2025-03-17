@@ -58,7 +58,7 @@ describe("Vector Retrieval Chain", () => {
         input,
         rephrasedQuestion,
       },
-      { configurable: { sessionId } }
+      { configurable: { sessionId } },
     );
 
     // Should generate an answer
@@ -73,7 +73,7 @@ describe("Vector Retrieval Chain", () => {
           [ (r)-[:CONTEXT]->(m) | m.title ] AS context
         ORDER BY r.createdAt DESC LIMIT 1
     `,
-      { sessionId }
+      { sessionId },
     );
 
     expect(res).toBeDefined();

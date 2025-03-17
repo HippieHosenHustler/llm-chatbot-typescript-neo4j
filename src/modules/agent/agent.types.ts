@@ -19,7 +19,7 @@ export const AgentToolInputSchema = z.object({
   rephrasedQuestion: z
     .string()
     .describe(
-      "A rephrased version of the original question based on the conversation history"
+      "A rephrased version of the original question based on the conversation history",
     ),
 });
 // end::schema[]

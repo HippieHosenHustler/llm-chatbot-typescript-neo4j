@@ -24,7 +24,7 @@ export type CypherEvaluationChainOutput = {
 
 // tag::function[]
 export default async function initCypherEvaluationChain(
-  llm: BaseLanguageModel
+  llm: BaseLanguageModel,
 ) {
   // tag::prompt[]
   // Prompt template

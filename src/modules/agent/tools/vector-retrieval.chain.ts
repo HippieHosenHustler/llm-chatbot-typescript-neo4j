@@ -22,7 +22,7 @@ type RetrievalChainThroughput = AgentToolInput & {
 // tag::extractDocumentIds[]
 // Helper function to extract document IDs from Movie node metadata
 const extractDocumentIds = (
-  documents: DocumentInterface<{ _id: string; [key: string]: any }>[]
+  documents: DocumentInterface<{ _id: string; [key: string]: any }>[],
 ): string[] => documents.map((document) => document.metadata._id);
 // end::extractDocumentIds[]
 
@@ -35,7 +35,7 @@ const docsToJson = (documents: DocumentInterface[]) =>
 // tag::function[]
 export default async function initVectorRetrievalChain(
   llm: BaseLanguageModel,
-  embeddings: Embeddings
+  embeddings: Embeddings,
 ): Promise<Runnable<AgentToolInput, string>> {
   // TODO: Create vector store instance
   // const vectorStore = ...

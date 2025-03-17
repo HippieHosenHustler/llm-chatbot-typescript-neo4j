@@ -20,7 +20,7 @@ export async function clearHistory(sessionId: string): Promise<void> {
     DETACH DELETE r
   `,
     { sessionId },
-    "WRITE"
+    "WRITE",
   );
 }
 // end::clear[]
@@ -28,7 +28,7 @@ export async function clearHistory(sessionId: string): Promise<void> {
 // tag::get[]
 export async function getHistory(
   sessionId: string,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<ChatbotResponse[]> {
   // TODO: Execute the Cypher statement from /cypher/get-history.cypher in a read transaction
   // TODO: Use string templating to make the limit dynamic: 0..${limit}
@@ -58,7 +58,7 @@ export async function saveHistory(
   rephrasedQuestion: string,
   output: string,
   ids: string[],
-  cypher: string | null = null
+  cypher: string | null = null,
 ): Promise<string> {
   // TODO: Execute the Cypher statement from /cypher/save-response.cypher in a write transaction
   // const graph = await initGraph()

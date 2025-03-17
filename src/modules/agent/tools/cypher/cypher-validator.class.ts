@@ -5,7 +5,7 @@ export class Relationship {
     public from: string,
     public relationship: string,
     public to: string,
-    public properties: Record<string, SchemaProperties>
+    public properties: Record<string, SchemaProperties>,
   ) {}
 }
 
@@ -13,7 +13,7 @@ export class Node {
   constructor(
     public label: string,
     public count: number,
-    public properties: Record<string, SchemaProperties>
+    public properties: Record<string, SchemaProperties>,
   ) {}
 }
 
@@ -58,7 +58,7 @@ export class CypherValidator {
   constructor(
     private readonly graph: Neo4jGraph | null,
     private nodes: Node[] = [],
-    private relationships: Relationship[] = []
+    private relationships: Relationship[] = [],
   ) {}
 
   /**
@@ -90,12 +90,12 @@ export class CypherValidator {
         nodes.push(node);
 
         for (const [type, relDetails] of Object.entries(
-          details.relationships
+          details.relationships,
         )) {
           if (relDetails.direction == "out") {
             for (const to of relDetails.labels) {
               relationships.push(
-                new Relationship(from, type, to, relDetails.properties)
+                new Relationship(from, type, to, relDetails.properties),
               );
             }
           }
@@ -131,8 +131,8 @@ export class CypherValidator {
       .map(
         (relationship) =>
           `(:${relationship.from})-[:${relationship.relationship} ${properties(
-            relationship
-          )}]->(:${relationship.to})`
+            relationship,
+          )}]->(:${relationship.to})`,
       )
       .join("\n- ")}`;
 
@@ -252,7 +252,7 @@ export class CypherValidator {
   private anyRelationshipExists(
     from: string[],
     rel: string[],
-    to: string[]
+    to: string[],
   ): RelationshipExistsDecision {
     for (const f of from) {
       for (const t of to) {
@@ -304,16 +304,16 @@ export class CypherValidator {
   private relationshipExists(from: string, rel: string, to: string): boolean {
     if (from === "") {
       return this.relationships.some(
-        (schema) => schema.relationship == rel && schema.to == to
+        (schema) => schema.relationship == rel && schema.to == to,
       );
     } else if (to === "") {
       return this.relationships.some(
-        (schema) => schema.relationship == rel && schema.from == from
+        (schema) => schema.relationship == rel && schema.from == from,
       );
     } else {
       return this.relationships.some(
         (schema) =>
-          schema.relationship == rel && schema.from == from && schema.to == to
+          schema.relationship == rel && schema.from == from && schema.to == to,
       );
     }
   }
@@ -350,10 +350,10 @@ export class CypherValidator {
   private noRelationshipError(
     from: string[],
     rel: string[],
-    to: string[]
+    to: string[],
   ): string {
     return `Relationship combination not found: (:${from.join(
-      ":"
+      ":",
     )})-[:${rel.join("|")}]->(:${to.join(":")})`;
   }
 
@@ -406,12 +406,16 @@ export class CypherValidator {
         const exists = this.anyRelationshipExists(
           leftLabels,
           relationshipTypes,
-          rightLabels
+          rightLabels,
         );
 
         if (exists === RelationshipExistsDecision.NOT_FOUND) {
           errors.push(
-            this.noRelationshipError(leftLabels, relationshipTypes, rightLabels)
+            this.noRelationshipError(
+              leftLabels,
+              relationshipTypes,
+              rightLabels,
+            ),
           );
         } else if (exists === RelationshipExistsDecision.REVERSE_DIRECTION) {
           query = query.replace(pattern, `(${left})<-[${rel}]-(${right})`);
@@ -424,12 +428,16 @@ export class CypherValidator {
         const exists = this.anyRelationshipExists(
           rightLabels,
           relationshipTypes,
-          leftLabels
+          leftLabels,
         );
 
         if (exists === RelationshipExistsDecision.NOT_FOUND) {
           errors.push(
-            this.noRelationshipError(rightLabels, relationshipTypes, leftLabels)
+            this.noRelationshipError(
+              rightLabels,
+              relationshipTypes,
+              leftLabels,
+            ),
           );
         } else if (exists === RelationshipExistsDecision.REVERSE_DIRECTION) {
           query = query.replace(pattern, `(${left})-[${rel}]->(${right})`);
@@ -445,7 +453,7 @@ export class CypherValidator {
 
     if (errors.length > 0) {
       return `Your query: \n${query} has the following errors: \n${errors.join(
-        "\n"
+        "\n",
       )} `;
     }
 

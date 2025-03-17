@@ -32,7 +32,7 @@ type CypherRetrievalThroughput = AgentToolInput & {
 async function recursivelyEvaluate(
   graph: Neo4jGraph,
   llm: BaseLanguageModel,
-  question: string
+  question: string,
 ): Promise<string> {
   // tag::chains[]
   // Initiate chains
@@ -90,7 +90,7 @@ async function recursivelyEvaluate(
 export async function getResults(
   graph: Neo4jGraph,
   llm: BaseLanguageModel,
-  input: { question: string; cypher: string }
+  input: { question: string; cypher: string },
 ): Promise<any | undefined> {
   // tag::resultvars[]
   let results;
@@ -128,7 +128,7 @@ export async function getResults(
 // tag::function[]
 export default async function initCypherRetrievalChain(
   llm: BaseLanguageModel,
-  graph: Neo4jGraph
+  graph: Neo4jGraph,
 ) {
   // tag::answerchain[]
   const answerGeneration = await initGenerateAuthoritativeAnswerChain(llm);
@@ -188,7 +188,7 @@ export default async function initCypherRetrievalChain(
             input.rephrasedQuestion,
             input.output,
             input.ids,
-            input.cypher
+            input.cypher,
           );
         },
       })

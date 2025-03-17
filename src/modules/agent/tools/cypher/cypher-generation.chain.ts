@@ -10,7 +10,7 @@ import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
 // tag::function[]
 export default async function initCypherGenerationChain(
   graph: Neo4jGraph,
-  llm: BaseLanguageModel
+  llm: BaseLanguageModel,
 ) {
   // TODO: Create Prompt Template
   // const cypherPrompt = PromptTemplate.fromTemplate( ... )

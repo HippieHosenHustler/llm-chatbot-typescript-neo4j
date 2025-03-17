@@ -60,7 +60,7 @@ describe("Langchain Agent", () => {
           configurable: {
             sessionId,
           },
-        }
+        },
       );
 
       expect(output).toContain("ask a question");

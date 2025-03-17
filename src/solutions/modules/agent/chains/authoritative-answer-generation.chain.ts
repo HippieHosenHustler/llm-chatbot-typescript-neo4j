@@ -14,7 +14,7 @@ export type GenerateAuthoritativeAnswerInput = {
 // end::interface[]
 
 export default function initGenerateAuthoritativeAnswerChain(
-  llm: BaseLanguageModel
+  llm: BaseLanguageModel,
 ): RunnableSequence<GenerateAuthoritativeAnswerInput, string> {
   // tag::prompt[]
   const answerQuestionPrompt = PromptTemplate.fromTemplate(`

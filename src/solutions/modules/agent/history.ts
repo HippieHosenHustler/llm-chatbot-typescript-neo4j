@@ -20,7 +20,7 @@ export async function clearHistory(sessionId: string): Promise<void> {
     DETACH DELETE r
   `,
     { sessionId },
-    "WRITE"
+    "WRITE",
   );
 }
 // end::clear[]
@@ -28,7 +28,7 @@ export async function clearHistory(sessionId: string): Promise<void> {
 // tag::get[]
 export async function getHistory(
   sessionId: string,
-  limit: number = 5
+  limit: number = 5,
 ): Promise<ChatbotResponse[]> {
   // tag::gettx[]
   const graph = await initGraph();
@@ -47,7 +47,7 @@ export async function getHistory(
         [ (response)-[:CONTEXT]->(n) | elementId(n) ] AS context
     `,
     { sessionId },
-    "READ"
+    "READ",
   );
   // end::gettx[]
 
@@ -77,7 +77,7 @@ export async function saveHistory(
   rephrasedQuestion: string,
   output: string,
   ids: string[],
-  cypher: string | null = null
+  cypher: string | null = null,
 ): Promise<string> {
   // tag::savetx[]
   const graph = await initGraph();
@@ -139,7 +139,7 @@ export async function saveHistory(
       cypher: cypher,
       ids,
     },
-    "WRITE"
+    "WRITE",
   );
   // end::savetx[]
 

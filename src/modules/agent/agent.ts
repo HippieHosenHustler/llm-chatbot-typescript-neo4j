@@ -16,7 +16,7 @@ import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
 export default async function initAgent(
   llm: BaseChatModel,
   embeddings: Embeddings,
-  graph: Neo4jGraph
+  graph: Neo4jGraph,
 ) {
   // TODO: Initiate tools
   // const tools = ...

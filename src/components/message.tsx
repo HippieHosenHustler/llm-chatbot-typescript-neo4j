@@ -4,7 +4,7 @@ import { Message } from "@/hooks/chat";
 function fixMarkdown(message: Message): string {
   return parse(message.content).replace(
     '<a href="',
-    '<a target="_blank" href="'
+    '<a target="_blank" href="',
   );
 }
 

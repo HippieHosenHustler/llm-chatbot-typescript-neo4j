@@ -15,7 +15,7 @@ export type GenerateAuthoritativeAnswerInput = {
 
 // tag::function[]
 export default function initGenerateAuthoritativeAnswerChain(
-  llm: BaseLanguageModel
+  llm: BaseLanguageModel,
 ): RunnableSequence<GenerateAuthoritativeAnswerInput, string> {
   // TODO: Create prompt
   // const answerQuestionPrompt = PromptTemplate.fromTemplate(...)

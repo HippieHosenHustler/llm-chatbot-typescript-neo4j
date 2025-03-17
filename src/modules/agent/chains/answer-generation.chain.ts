@@ -12,7 +12,7 @@ export interface GenerateAnswerInput {
 
 // tag::function[]
 export default function initGenerateAnswerChain(
-  llm: BaseLanguageModel
+  llm: BaseLanguageModel,
 ): RunnableSequence<GenerateAnswerInput, string> {
   // TODO: Create a Prompt Template
   // const answerQuestionPrompt = PromptTemplate.fromTemplate(`

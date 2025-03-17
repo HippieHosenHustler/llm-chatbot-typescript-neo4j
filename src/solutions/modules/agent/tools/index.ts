@@ -10,7 +10,7 @@ import { AgentToolInputSchema } from "../../../../modules/agent/agent.types";
 export default async function initTools(
   llm: BaseChatModel,
   embeddings: Embeddings,
-  graph: Neo4jGraph
+  graph: Neo4jGraph,
 ): Promise<DynamicStructuredTool[]> {
   // tag::cypherchain[]
   // Initiate chains

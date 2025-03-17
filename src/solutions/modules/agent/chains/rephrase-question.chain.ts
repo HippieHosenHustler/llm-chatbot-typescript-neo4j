@@ -54,7 +54,7 @@ export default function initRephraseChain(llm: BaseChatModel) {
         return history
           .map(
             (response: ChatbotResponse) =>
-              `Human: ${response.input}\nAI: ${response.output}`
+              `Human: ${response.input}\nAI: ${response.output}`,
           )
           .join("\n");
       },

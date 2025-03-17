@@ -14,7 +14,7 @@ export type RephraseQuestionInput = {
   input: string;
   // Conversation history of {input, output} from the database
   history: ChatbotResponse[];
-}
+};
 // end::interface[]
 
 // tag::function[]
