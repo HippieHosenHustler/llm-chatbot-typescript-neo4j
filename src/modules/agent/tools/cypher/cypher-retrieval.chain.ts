@@ -1,21 +1,21 @@
-import { BaseLanguageModel } from "langchain/base_language";
-import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
-import { RunnablePassthrough } from "@langchain/core/runnables";
-import initCypherGenerationChain from "./cypher-generation.chain";
-import initCypherEvaluationChain from "./cypher-evaluation.chain";
-import { saveHistory } from "../../history";
-import { AgentToolInput } from "../../agent.types";
-import { extractIds } from "../../../../utils";
-import initGenerateAuthoritativeAnswerChain from "../../chains/authoritative-answer-generation.chain";
+import { BaseLanguageModel } from 'langchain/base_language'
+import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
+import { RunnablePassthrough } from '@langchain/core/runnables'
+import initCypherGenerationChain from './cypher-generation.chain'
+import initCypherEvaluationChain from './cypher-evaluation.chain'
+import { saveHistory } from '../../history'
+import { AgentToolInput } from '../../agent.types'
+import { extractIds } from '../../../../utils'
+import initGenerateAuthoritativeAnswerChain from '../../chains/authoritative-answer-generation.chain'
 
 // tag::input[]
 type CypherRetrievalThroughput = AgentToolInput & {
-  context: string;
-  output: string;
-  cypher: string;
-  results: Record<string, any> | Record<string, any>[];
-  ids: string[];
-};
+  context: string
+  output: string
+  cypher: string
+  results: Record<string, any> | Record<string, any>[]
+  ids: string[]
+}
 // end::input[]
 
 // tag::recursive[]
@@ -31,7 +31,7 @@ type CypherRetrievalThroughput = AgentToolInput & {
 export async function recursivelyEvaluate(
   graph: Neo4jGraph,
   llm: BaseLanguageModel,
-  question: string,
+  question: string
 ): Promise<string> {
   // TODO: Create Cypher Generation Chain
   // const generationChain = ...
@@ -62,7 +62,7 @@ export async function recursivelyEvaluate(
 export async function getResults(
   graph: Neo4jGraph,
   llm: BaseLanguageModel,
-  input: { question: string; cypher: string },
+  input: { question: string; cypher: string }
 ): Promise<any | undefined> {
   // TODO: catch Cypher errors and pass to the Cypher evaluation chain
 }
@@ -71,7 +71,7 @@ export async function getResults(
 // tag::function[]
 export default async function initCypherRetrievalChain(
   llm: BaseLanguageModel,
-  graph: Neo4jGraph,
+  graph: Neo4jGraph
 ) {
   // TODO: initiate answer chain
   // const answerGeneration = ...

@@ -1,18 +1,18 @@
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { PromptTemplate } from "@langchain/core/prompts";
-import { RunnableSequence } from "@langchain/core/runnables";
-import { BaseLanguageModel } from "langchain/base_language";
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { PromptTemplate } from '@langchain/core/prompts'
+import { RunnableSequence } from '@langchain/core/runnables'
+import { BaseLanguageModel } from 'langchain/base_language'
 
 // tag::interface[]
 export interface GenerateAnswerInput {
-  question: string;
-  context: string;
+  question: string
+  context: string
 }
 // end::interface[]
 
 // tag::function[]
 export default function initGenerateAnswerChain(
-  llm: BaseLanguageModel,
+  llm: BaseLanguageModel
 ): RunnableSequence<GenerateAnswerInput, string> {
   // tag::prompt[]
   const answerQuestionPrompt = PromptTemplate.fromTemplate(`
@@ -29,7 +29,7 @@ export default function initGenerateAnswerChain(
 
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     Include links and sources where possible.
-  `);
+  `)
   // end::prompt[]
 
   // tag::sequence[]
@@ -37,7 +37,7 @@ export default function initGenerateAnswerChain(
     answerQuestionPrompt,
     llm,
     new StringOutputParser(),
-  ]);
+  ])
   // end::sequence[]
 }
 // end::function[]

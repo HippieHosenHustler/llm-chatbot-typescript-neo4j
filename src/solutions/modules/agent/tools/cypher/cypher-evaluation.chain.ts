@@ -1,30 +1,30 @@
-import { BaseLanguageModel } from "langchain/base_language";
-import { PromptTemplate } from "@langchain/core/prompts";
+import { BaseLanguageModel } from 'langchain/base_language'
+import { PromptTemplate } from '@langchain/core/prompts'
 import {
   RunnablePassthrough,
   RunnableSequence,
-} from "@langchain/core/runnables";
-import { JsonOutputParser } from "@langchain/core/output_parsers";
+} from '@langchain/core/runnables'
+import { JsonOutputParser } from '@langchain/core/output_parsers'
 
 // tag::interface[]
 export type CypherEvaluationChainInput = {
-  question: string;
-  cypher: string;
-  schema: string;
-  errors: string[] | string | undefined;
-};
+  question: string
+  cypher: string
+  schema: string
+  errors: string[] | string | undefined
+}
 // end::interface[]
 
 // tag::output[]
 export type CypherEvaluationChainOutput = {
-  cypher: string;
-  errors: string[];
-};
+  cypher: string
+  errors: string[]
+}
 // end::output[]
 
 // tag::function[]
 export default async function initCypherEvaluationChain(
-  llm: BaseLanguageModel,
+  llm: BaseLanguageModel
 ) {
   // tag::prompt[]
   // Prompt template
@@ -77,7 +77,7 @@ export default async function initCypherEvaluationChain(
     {cypher}
 
     {errors}
-  `);
+  `)
   // end::prompt[]
 
   // tag::runnable[]
@@ -95,12 +95,12 @@ export default async function initCypherEvaluationChain(
           errors === undefined ||
           (Array.isArray(errors) && errors.length === 0)
         ) {
-          return "";
+          return ''
         }
 
         return `Errors: * ${
-          Array.isArray(errors) ? errors?.join("\n* ") : errors
-        }`;
+          Array.isArray(errors) ? errors?.join('\n* ') : errors
+        }`
       },
     }),
     // end::assign[]
@@ -110,7 +110,7 @@ export default async function initCypherEvaluationChain(
     new JsonOutputParser<CypherEvaluationChainOutput>(),
     // end::rest[]
     // tag::endsequence[]
-  ]);
+  ])
   // end::endsequence[]
   // end::runnable[]
 }

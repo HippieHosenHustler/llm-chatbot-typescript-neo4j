@@ -1,5 +1,5 @@
-import { EmbeddingsInterface } from "@langchain/core/embeddings";
-import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector";
+import { EmbeddingsInterface } from '@langchain/core/embeddings'
+import { Neo4jVectorStore } from '@langchain/community/vectorstores/neo4j_vector'
 
 /**
  * Create a new vector search index that uses the existing
@@ -10,16 +10,16 @@ import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector
  */
 // tag::function[]
 export default async function initVectorStore(
-  embeddings: EmbeddingsInterface,
+  embeddings: EmbeddingsInterface
 ): Promise<Neo4jVectorStore> {
   // tag::store[]
   const vectorStore = await Neo4jVectorStore.fromExistingIndex(embeddings, {
     url: process.env.NEO4J_URI as string,
     username: process.env.NEO4J_USERNAME as string,
     password: process.env.NEO4J_PASSWORD as string,
-    indexName: "moviePlots",
-    textNodeProperty: "plot",
-    embeddingNodeProperty: "embedding",
+    indexName: 'moviePlots',
+    textNodeProperty: 'plot',
+    embeddingNodeProperty: 'embedding',
     retrievalQuery: `
       RETURN
         node.plot AS text,
@@ -33,11 +33,11 @@ export default async function initVectorStore(
           source: 'https://www.themoviedb.org/movie/'+ node.tmdbId
         } AS metadata
     `,
-  });
+  })
   // end::store[]
 
   // tag::return[]
-  return vectorStore;
+  return vectorStore
   // end::return[]
 }
 // end::function[]

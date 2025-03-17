@@ -1,16 +1,16 @@
-import { BaseLanguageModel } from "langchain/base_language";
-import { PromptTemplate } from "@langchain/core/prompts";
+import { BaseLanguageModel } from 'langchain/base_language'
+import { PromptTemplate } from '@langchain/core/prompts'
 import {
   RunnablePassthrough,
   RunnableSequence,
-} from "@langchain/core/runnables";
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
+} from '@langchain/core/runnables'
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
 
 // tag::function[]
 export default async function initCypherGenerationChain(
   graph: Neo4jGraph,
-  llm: BaseLanguageModel,
+  llm: BaseLanguageModel
 ) {
   // tag::prompt[]
   // Create Prompt Template
@@ -49,7 +49,7 @@ export default async function initCypherGenerationChain(
 
     Question:
     {question}
-  `);
+  `)
   // end::prompt[]
 
   // tag::sequence[]
@@ -71,7 +71,7 @@ export default async function initCypherGenerationChain(
     new StringOutputParser(),
     // end::rest[]
     // tag::endsequence[]
-  ]);
+  ])
   // end::endsequence[]
   // end::sequence[]
 }

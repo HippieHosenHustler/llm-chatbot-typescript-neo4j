@@ -1,37 +1,37 @@
-import { initGraph } from "../../../modules/graph";
+import { initGraph } from '../../../modules/graph'
 
 type UnpersistedChatbotResponse = {
-  input: string;
-  rephrasedQuestion: string;
-  output: string;
-  cypher: string | undefined;
-};
+  input: string
+  rephrasedQuestion: string
+  output: string
+  cypher: string | undefined
+}
 
 export type ChatbotResponse = UnpersistedChatbotResponse & {
-  id: string;
-};
+  id: string
+}
 
 // tag::clear[]
 export async function clearHistory(sessionId: string): Promise<void> {
-  const graph = await initGraph();
+  const graph = await initGraph()
   await graph.query(
     `
     MATCH (s:Session {id: $sessionId})-[:HAS_RESPONSE]->(r)
     DETACH DELETE r
   `,
     { sessionId },
-    "WRITE",
-  );
+    'WRITE'
+  )
 }
 // end::clear[]
 
 // tag::get[]
 export async function getHistory(
   sessionId: string,
-  limit: number = 5,
+  limit: number = 5
 ): Promise<ChatbotResponse[]> {
   // tag::gettx[]
-  const graph = await initGraph();
+  const graph = await initGraph()
   const res = await graph.query<ChatbotResponse>(
     `
       MATCH (:Session {id: $sessionId})-[:LAST_RESPONSE]->(last)
@@ -47,12 +47,12 @@ export async function getHistory(
         [ (response)-[:CONTEXT]->(n) | elementId(n) ] AS context
     `,
     { sessionId },
-    "READ",
-  );
+    'READ'
+  )
   // end::gettx[]
 
   // tag::getreturn[]
-  return res as ChatbotResponse[];
+  return res as ChatbotResponse[]
   // end::getreturn[]
 }
 // end::get[]
@@ -77,10 +77,10 @@ export async function saveHistory(
   rephrasedQuestion: string,
   output: string,
   ids: string[],
-  cypher: string | null = null,
+  cypher: string | null = null
 ): Promise<string> {
   // tag::savetx[]
-  const graph = await initGraph();
+  const graph = await initGraph()
   const res = await graph.query<{ id: string }>(
     `
     MERGE (session:Session { id: $sessionId }) // <1>
@@ -139,12 +139,12 @@ export async function saveHistory(
       cypher: cypher,
       ids,
     },
-    "WRITE",
-  );
+    'WRITE'
+  )
   // end::savetx[]
 
   // tag::savereturn[]
-  return res && res.length ? res[0].id : "";
+  return res && res.length ? res[0].id : ''
   // end::savereturn[]
 }
 // end::save[]

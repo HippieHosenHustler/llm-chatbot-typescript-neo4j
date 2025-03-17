@@ -1,20 +1,20 @@
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { PromptTemplate } from '@langchain/core/prompts'
 import {
   RunnablePassthrough,
   RunnableSequence,
-} from "@langchain/core/runnables";
-import { BaseLanguageModel } from "langchain/base_language";
+} from '@langchain/core/runnables'
+import { BaseLanguageModel } from 'langchain/base_language'
 
 // tag::interface[]
 export type GenerateAuthoritativeAnswerInput = {
-  question: string;
-  context: string | undefined;
-};
+  question: string
+  context: string | undefined
+}
 // end::interface[]
 
 export default function initGenerateAuthoritativeAnswerChain(
-  llm: BaseLanguageModel,
+  llm: BaseLanguageModel
 ): RunnableSequence<GenerateAuthoritativeAnswerInput, string> {
   // tag::prompt[]
   const answerQuestionPrompt = PromptTemplate.fromTemplate(`
@@ -42,19 +42,19 @@ export default function initGenerateAuthoritativeAnswerChain(
 
     Context:
     {context}
-  `);
+  `)
   // end::prompt[]
 
   // tag::sequence[]
   return RunnableSequence.from<GenerateAuthoritativeAnswerInput, string>([
     RunnablePassthrough.assign({
       context: ({ context }) =>
-        context == undefined || context === "" ? "I don't know" : context,
+        context == undefined || context === '' ? "I don't know" : context,
     }),
     answerQuestionPrompt,
     llm,
     new StringOutputParser(),
-  ]);
+  ])
   // end::sequence[]
 }
 

@@ -1,21 +1,21 @@
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { PromptTemplate } from '@langchain/core/prompts'
 import {
   RunnablePassthrough,
   RunnableSequence,
-} from "@langchain/core/runnables";
-import { BaseLanguageModel } from "langchain/base_language";
+} from '@langchain/core/runnables'
+import { BaseLanguageModel } from 'langchain/base_language'
 
 // tag::interface[]
 export type GenerateAuthoritativeAnswerInput = {
-  question: string;
-  context: string | undefined;
-};
+  question: string
+  context: string | undefined
+}
 // end::interface[]
 
 // tag::function[]
 export default function initGenerateAuthoritativeAnswerChain(
-  llm: BaseLanguageModel,
+  llm: BaseLanguageModel
 ): RunnableSequence<GenerateAuthoritativeAnswerInput, string> {
   // TODO: Create prompt
   // const answerQuestionPrompt = PromptTemplate.fromTemplate(...)

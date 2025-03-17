@@ -1,10 +1,10 @@
 // tag::import[]
-import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
+import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
 // end::import[]
 
 // tag::graph[]
 // <1> The singleton instance
-let graph: Neo4jGraph;
+let graph: Neo4jGraph
 
 /**
  * Return the existing `graph` object or create one
@@ -21,12 +21,12 @@ export async function initGraph(): Promise<Neo4jGraph> {
       username: process.env.NEO4J_USERNAME as string,
       password: process.env.NEO4J_PASSWORD as string,
       database: process.env.NEO4J_DATABASE as string | undefined,
-    });
+    })
   }
   // end::create[]
 
   // tag::return[]
-  return graph;
+  return graph
   // end::return[]
 }
 // end::graph[]

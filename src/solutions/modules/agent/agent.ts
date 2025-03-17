@@ -1,16 +1,16 @@
 /* eslint-disable indent */
-import { Embeddings } from "@langchain/core/embeddings";
-import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { AgentExecutor, createOpenAIFunctionsAgent } from "langchain/agents";
-import { pull } from "langchain/hub";
+import { Embeddings } from '@langchain/core/embeddings'
+import { Neo4jGraph } from '@langchain/community/graphs/neo4j_graph'
+import { ChatPromptTemplate } from '@langchain/core/prompts'
+import { AgentExecutor, createOpenAIFunctionsAgent } from 'langchain/agents'
+import { pull } from 'langchain/hub'
 import initRephraseChain, {
   RephraseQuestionInput,
-} from "./chains/rephrase-question.chain";
-import { BaseChatModel } from "langchain/chat_models/base";
-import { RunnablePassthrough } from "@langchain/core/runnables";
-import { getHistory } from "./history";
-import initTools from "./tools";
+} from './chains/rephrase-question.chain'
+import { BaseChatModel } from 'langchain/chat_models/base'
+import { RunnablePassthrough } from '@langchain/core/runnables'
+import { getHistory } from './history'
+import initTools from './tools'
 
 /**
  * To restrict the scope of the agent, you can issue specific instructions
@@ -20,15 +20,15 @@ import initTools from "./tools";
  * _thinking_ that the agent has performed while selecting the appropriate tool
  */
 // tag::scoped[]
-import { MessagesPlaceholder } from "@langchain/core/prompts";
+import { MessagesPlaceholder } from '@langchain/core/prompts'
 
 const prompt = ChatPromptTemplate.fromMessages<{
-  chat_history: string;
-  agent_scratchpad: string;
-  rephrasedQuestion: string;
+  chat_history: string
+  agent_scratchpad: string
+  rephrasedQuestion: string
 }>([
   [
-    "system",
+    'system',
     `
   You are Ebert, a movie recommendation chatbot.
   Your goal is to provide movie lovers with excellent recommendations
@@ -39,26 +39,26 @@ const prompt = ChatPromptTemplate.fromMessages<{
   related to the movie industry.
   `,
   ],
-  ["human", "{rephrasedQuestion}"],
-  new MessagesPlaceholder({ variableName: "chat_history", optional: true }),
-  new MessagesPlaceholder("agent_scratchpad"),
-]);
+  ['human', '{rephrasedQuestion}'],
+  new MessagesPlaceholder({ variableName: 'chat_history', optional: true }),
+  new MessagesPlaceholder('agent_scratchpad'),
+])
 // end::scoped[]
 
 // tag::function[]
 export default async function initAgent(
   llm: BaseChatModel,
   embeddings: Embeddings,
-  graph: Neo4jGraph,
+  graph: Neo4jGraph
 ) {
   // tag::tools[]
-  const tools = await initTools(llm, embeddings, graph);
+  const tools = await initTools(llm, embeddings, graph)
   // end::tools[]
 
   // tag::prompt[]
   const prompt = await pull<ChatPromptTemplate>(
-    "hwchase17/openai-functions-agent",
-  );
+    'hwchase17/openai-functions-agent'
+  )
   // end::prompt[]
 
   // tag::agent[]
@@ -66,7 +66,7 @@ export default async function initAgent(
     llm,
     tools,
     prompt,
-  });
+  })
   // end::agent[]
 
   // tag::executor[]
@@ -74,11 +74,11 @@ export default async function initAgent(
     agent,
     tools,
     verbose: true, // Verbose output logs the agents _thinking_
-  });
+  })
   // end::executor[]
 
   // tag::rephrasechain[]
-  const rephraseQuestionChain = await initRephraseChain(llm);
+  const rephraseQuestionChain = await initRephraseChain(llm)
   // end::rephrasechain[]
 
   // tag::history[]
@@ -86,11 +86,9 @@ export default async function initAgent(
     RunnablePassthrough.assign<{ input: string; sessionId: string }, any>({
       // Get Message History
       history: async (_input, options) => {
-        const history = await getHistory(
-          options?.config.configurable.sessionId,
-        );
+        const history = await getHistory(options?.config.configurable.sessionId)
 
-        return history;
+        return history
       },
     })
       // end::history[]
@@ -107,8 +105,8 @@ export default async function initAgent(
       .pipe(executor)
       // end::execute[]
       // tag::output[]
-      .pick("output")
-  );
+      .pick('output')
+  )
   // end::output[]
 }
 // end::function[]

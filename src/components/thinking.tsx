@@ -11,5 +11,5 @@ export default function Thinking() {
       <div className="inline-block w-2 h-2 bg-emerald-800 rounded-full animate-pulse delay-100"></div>
       <div className="inline-block w-2 h-2 bg-emerald-800 rounded-full m-1 animate-pulse delay-200"></div>
     </div>
-  );
+  )
 }

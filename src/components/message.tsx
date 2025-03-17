@@ -1,18 +1,18 @@
-import { parse } from "marked";
-import { Message } from "@/hooks/chat";
+import { parse } from 'marked'
+import { Message } from '@/hooks/chat'
 
 function fixMarkdown(message: Message): string {
   return parse(message.content).replace(
     '<a href="',
-    '<a target="_blank" href="',
-  );
+    '<a target="_blank" href="'
+  )
 }
 
 export default function Message({ message }: { message: Message }) {
-  const align = message.role == "ai" ? "justify-start" : "justify-end";
+  const align = message.role == 'ai' ? 'justify-start' : 'justify-end'
   const no_rounding =
-    message.role == "ai" ? "rounded-bl-none" : "rounded-br-none";
-  const background = message.role == "ai" ? "blue" : "slate";
+    message.role == 'ai' ? 'rounded-bl-none' : 'rounded-br-none'
+  const background = message.role == 'ai' ? 'blue' : 'slate'
 
   return (
     <div className={`w-full flex flex-row ${align}`}>
@@ -32,5 +32,5 @@ export default function Message({ message }: { message: Message }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

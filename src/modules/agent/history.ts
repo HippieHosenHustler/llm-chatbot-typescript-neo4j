@@ -1,34 +1,34 @@
-import { initGraph } from "../graph";
+import { initGraph } from '../graph'
 
 type UnpersistedChatbotResponse = {
-  input: string;
-  rephrasedQuestion: string;
-  output: string;
-  cypher: string | undefined;
-};
+  input: string
+  rephrasedQuestion: string
+  output: string
+  cypher: string | undefined
+}
 
 export type ChatbotResponse = UnpersistedChatbotResponse & {
-  id: string;
-};
+  id: string
+}
 
 // tag::clear[]
 export async function clearHistory(sessionId: string): Promise<void> {
-  const graph = await initGraph();
+  const graph = await initGraph()
   await graph.query(
     `
     MATCH (s:Session {id: $sessionId})-[:HAS_RESPONSE]->(r)
     DETACH DELETE r
   `,
     { sessionId },
-    "WRITE",
-  );
+    'WRITE'
+  )
 }
 // end::clear[]
 
 // tag::get[]
 export async function getHistory(
   sessionId: string,
-  limit: number = 5,
+  limit: number = 5
 ): Promise<ChatbotResponse[]> {
   // TODO: Execute the Cypher statement from /cypher/get-history.cypher in a read transaction
   // TODO: Use string templating to make the limit dynamic: 0..${limit}
@@ -58,7 +58,7 @@ export async function saveHistory(
   rephrasedQuestion: string,
   output: string,
   ids: string[],
-  cypher: string | null = null,
+  cypher: string | null = null
 ): Promise<string> {
   // TODO: Execute the Cypher statement from /cypher/save-response.cypher in a write transaction
   // const graph = await initGraph()

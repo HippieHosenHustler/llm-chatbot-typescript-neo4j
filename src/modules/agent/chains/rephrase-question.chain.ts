@@ -1,20 +1,20 @@
-import { StringOutputParser } from "@langchain/core/output_parsers";
-import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { PromptTemplate } from '@langchain/core/prompts'
 import {
   RunnablePassthrough,
   RunnableSequence,
-} from "@langchain/core/runnables";
+} from '@langchain/core/runnables'
 
-import { BaseChatModel } from "langchain/chat_models/base";
-import { ChatbotResponse } from "../history";
+import { BaseChatModel } from 'langchain/chat_models/base'
+import { ChatbotResponse } from '../history'
 
 // tag::interface[]
 export type RephraseQuestionInput = {
   // The user's question
-  input: string;
+  input: string
   // Conversation history of {input, output} from the database
-  history: ChatbotResponse[];
-};
+  history: ChatbotResponse[]
+}
 // end::interface[]
 
 // tag::function[]
