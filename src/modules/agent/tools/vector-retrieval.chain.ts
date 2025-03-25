@@ -36,13 +36,38 @@ export default async function initVectorRetrievalChain(
     llm: BaseLanguageModel,
     embeddings: Embeddings
 ): Promise<Runnable<AgentToolInput, string>> {
-    // TODO: Create vector store instance
-    // const vectorStore = ...
-    // TODO: Initialize a retriever wrapper around the vector store
-    // const vectorStoreRetriever = ...
-    // TODO: Initialize Answer chain
-    // const answerChain = ...
-    // TODO: Return chain
-    // return RunnablePassthrough.assign( ... )
+    const vectorStore = await initVectorStore(embeddings)
+    const vectorStoreRetriever = vectorStore.asRetriever(5)
+    const answerChain = initGenerateAnswerChain(llm)
+    return RunnablePassthrough.assign({
+        documents: new RunnablePick('rephrasedQuestion').pipe(
+            vectorStoreRetriever
+        ),
+    })
+        .assign({
+            //Extract the Ids
+            ids: new RunnablePick('documents').pipe(extractDocumentIds),
+            //Convert documents to String
+            context: new RunnablePick('documents').pipe(docsToJson),
+        })
+        .assign({
+            output: (input: RetrievalChainThroughput) =>
+                answerChain.invoke({
+                    question: input.rephrasedQuestion,
+                    context: input.context,
+                }),
+        })
+        .assign({
+            responseId: async (input: RetrievalChainThroughput, options) =>
+                saveHistory(
+                    options?.config.configurable.sessionId,
+                    'vector',
+                    input.input,
+                    input.rephrasedQuestion,
+                    input.output,
+                    input.ids
+                ),
+        })
+        .pick('output')
 }
 // end::function[]
